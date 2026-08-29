@@ -1,42 +1,66 @@
-import React, { useEffect, useMemo, useState, useRef } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Scene from './components/Scene'
 import { MOCK_PLACEMENTS } from './data/mockPlacements'
-import type { Item, BoxType, PlacedItem } from './types'
+import type { Item, BoxType, Placement, PlacedItem } from './types'
 import { totalItemsWeight, cartonVolume, itemVolume, findBoxByRef } from './utils/calculations'
-
-const ITEM_COLORS: Record<string,string> = {
-  'ITM-001': '#1f77b4',
-  'ITM-002': '#ff7f0e',
-  'ITM-003': '#2ca02c'
-}
+import { normalizeBoxes, normalizeItems, normalizePlacements } from './utils/normalize'
+import { autoLayoutPlacement } from './utils/autoLayout'
+import { buildItemColorMap } from './utils/palette'
+import { DATA_SOURCES } from './config'
 
 export default function App(){
   const [boxes, setBoxes] = useState<BoxType[] | null>(null)
   const [items, setItems] = useState<Item[] | null>(null)
+  const [externalPlacements, setExternalPlacements] = useState<Placement[] | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [resetSignal, setResetSignal] = useState(0)
+  const [selectedBoxRef, setSelectedBoxRef] = useState<string>('MED')
+  const [boxPickerOpen, setBoxPickerOpen] = useState(false)
+  const [boxFilter, setBoxFilter] = useState('')
 
   useEffect(()=>{
-    fetch('/data/boxes.json').then(r=>r.json()).then(setBoxes)
-    fetch('/data/items.json').then(r=>r.json()).then(setItems)
+    fetch(DATA_SOURCES.boxes).then(r=>r.json()).then(raw => setBoxes(normalizeBoxes(raw)))
+    fetch(DATA_SOURCES.items).then(r=>r.json()).then(raw => setItems(normalizeItems(raw)))
+    if (DATA_SOURCES.placements) {
+      fetch(DATA_SOURCES.placements).then(r=>r.json()).then(raw => setExternalPlacements(normalizePlacements(raw)))
+    }
   },[])
 
-  const med = useMemo(()=> boxes ? findBoxByRef(boxes, 'MED') ?? boxes[0] : null, [boxes])
+  const availableBoxes = useMemo(()=> boxes ?? [], [boxes])
+  const med = useMemo(()=> boxes ? findBoxByRef(boxes, selectedBoxRef) ?? availableBoxes[0] ?? boxes[0] : null, [boxes, availableBoxes, selectedBoxRef])
+
+  const filteredBoxes = useMemo(()=>{
+    const q = boxFilter.trim().toLowerCase()
+    if(!q) return availableBoxes
+    return availableBoxes.filter(b => b.Reference.toLowerCase().includes(q))
+  }, [availableBoxes, boxFilter])
+
+  useEffect(()=>{
+    if(!boxPickerOpen) return
+    const onKeyDown = (e: KeyboardEvent) => { if(e.key === 'Escape') setBoxPickerOpen(false) }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [boxPickerOpen])
+
+  const placementSource = externalPlacements ?? MOCK_PLACEMENTS
+
+  const itemColors = useMemo(()=> items ? buildItemColorMap(items.map(it => it.ItemCode)) : {}, [items])
 
   const placed: PlacedItem[] = useMemo(()=>{
-    if(!items) return []
-    return items.map(it => {
-      const placement = MOCK_PLACEMENTS.find(p => p.ItemCode === it.ItemCode)
-      const displayed = placement ? placement.displayed : { width: it.Width, length: it.Length, depth: it.Depth }
-      const pos = placement ? placement.position : { x:0,y:0,z:0 }
+    if(!items || !med) return []
+    return items.map((it, index) => {
+      const placement = placementSource.find(p => p.ItemCode === it.ItemCode) ?? autoLayoutPlacement(it, index, med)
+      const { displayed, position: pos } = placement
+      // FitSolver coordinate convention: origin at the carton's bottom-left-back
+      // corner; x runs along Width, y along Length, z along Depth.
       const center = {
         x: pos.x + displayed.width/2,
-        y: pos.y + displayed.depth/2,
-        z: pos.z + displayed.length/2
+        y: pos.y + displayed.length/2,
+        z: pos.z + displayed.depth/2
       }
-      return { ...it, ...placement!, displayed, center }
-    }) as PlacedItem[]
-  }, [items])
+      return { ...it, ...placement, displayed, center }
+    })
+  }, [items, med, placementSource])
 
   const totalWeight = items ? totalItemsWeight(items) : 0
   const cartonVolumeMm = med ? cartonVolume(med) : 1
@@ -45,7 +69,13 @@ export default function App(){
   const weightUtil = med ? (totalWeight / (med.MaxWeight ?? totalWeight)) * 100 : 0
   const volumeUtil = (itemsVolumeMm / cartonVolumeMm) * 100
 
-  const sceneRef = useRef<any>(null)
+  const handleSelectBox = (ref: string) => {
+    setSelectedBoxRef(ref)
+    setSelected(null)
+    setResetSignal(s => s + 1)
+    setBoxPickerOpen(false)
+    setBoxFilter('')
+  }
 
   if(!med || !items) return <div className="loading">Loading data…</div>
 
@@ -54,6 +84,11 @@ export default function App(){
       <header className="app-header">COMP4050 — Fit Visualiser</header>
       <main className="app-main">
         <aside className="panel left">
+          <h3>Carton Size</h3>
+          <button className="box-picker-trigger secondary" onClick={() => setBoxPickerOpen(true)}>
+            <span>{med.Reference} — {med.Width}×{med.Length}×{med.Depth} mm</span>
+            <span aria-hidden="true">▾</span>
+          </button>
           <h3>Carton Summary</h3>
           <div><strong>Reference:</strong> {med.Reference}</div>
           <div><strong>Dimensions:</strong> {med.Width} × {med.Length} × {med.Depth} mm</div>
@@ -66,26 +101,21 @@ export default function App(){
           <h4>Legend</h4>
           <ul className="legend">
             {items.map(it => (
-              <li key={it.ItemCode}><span className="swatch" style={{background: ITEM_COLORS[it.ItemCode]}} /> {it.ItemCode} — {it.ItemReference}</li>
+              <li key={it.ItemCode}><span className="swatch" style={{background: itemColors[it.ItemCode]}} /> {it.ItemCode} — {it.ItemReference}</li>
             ))}
           </ul>
           <hr />
-          <p className="notice">Item positions are mocked until integration with the FitSolver optimisation engine.</p>
+          <p className="notice">
+            {externalPlacements
+              ? 'Item positions from the FitSolver placement endpoint.'
+              : 'Item positions are mocked until integration with the FitSolver optimisation engine; items without a mock placement fall back to an auto-arranged grid.'}
+          </p>
         </aside>
         <section className="viewer">
           <div className="viewer-topbar">
             <button onClick={()=>{ setSelected(null); setResetSignal(s=>s+1) }}>Reset View</button>
-            <button onClick={() => {
-              const data = sceneRef.current?.capture()
-              if (data) {
-                const a = document.createElement('a')
-                a.href = data
-                a.download = 'fit-visualiser-snapshot.png'
-                a.click()
-              }
-            }}>Capture Snapshot</button>
           </div>
-          <Scene ref={sceneRef} carton={{Width:med.Width, Length:med.Length, Depth:med.Depth}} items={placed} colors={ITEM_COLORS} selected={selected} onSelect={id=>setSelected(id)} resetSignal={resetSignal} />
+          <Scene carton={{Width:med.Width, Length:med.Length, Depth:med.Depth}} items={placed} colors={itemColors} selected={selected} onSelect={id=>setSelected(id)} resetSignal={resetSignal} />
         </section>
         <aside className="panel right">
           <h3>Item Details</h3>
@@ -109,6 +139,41 @@ export default function App(){
         </aside>
       </main>
       <footer className="app-footer">Demo prototype — no backend. Mobile responsive layout.</footer>
+
+      {boxPickerOpen && (
+        <div className="modal-backdrop" onClick={() => setBoxPickerOpen(false)}>
+          <div className="modal-panel" onClick={e => e.stopPropagation()} role="dialog" aria-modal="true" aria-label="Select carton size">
+            <div className="modal-header">
+              <h3>Select Carton</h3>
+              <button className="secondary" onClick={() => setBoxPickerOpen(false)}>✕</button>
+            </div>
+            <input
+              className="modal-search"
+              type="text"
+              placeholder="Search by reference…"
+              value={boxFilter}
+              onChange={e => setBoxFilter(e.target.value)}
+              autoFocus
+            />
+            <ul className="box-list">
+              {filteredBoxes.map(b => (
+                <li key={b.Reference}>
+                  <button
+                    className={`box-list-item${b.Reference === med.Reference ? ' selected' : ''}${b.Active === false ? ' disabled' : ''}`}
+                    disabled={b.Active === false}
+                    onClick={() => handleSelectBox(b.Reference)}
+                  >
+                    <span className="box-list-ref">{b.Reference}</span>
+                    <span className="box-list-dims">{b.Width} × {b.Length} × {b.Depth} mm</span>
+                    {b.Active === false && <span className="box-list-inactive">inactive</span>}
+                  </button>
+                </li>
+              ))}
+              {filteredBoxes.length === 0 && <li className="box-list-empty">No matching boxes.</li>}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

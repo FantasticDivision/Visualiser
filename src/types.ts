@@ -6,6 +6,7 @@ export type BoxType = {
   MaxWeight?: number
   BoxWeight?: number
   Active?: boolean
+  MaximumBoxes?: number
 }
 
 export type Item = {
@@ -18,6 +19,9 @@ export type Item = {
   BoxGroup?: string
 }
 
+// FitSolver coordinate contract: origin (0,0,0) is the carton's bottom-left-back
+// corner; x runs along Width, y along Length, z along Depth. `position` is an
+// item's minimum corner along each axis; the item extends by `displayed` from there.
 export type Placement = {
   ItemCode: string
   position: { x: number; y: number; z: number }
