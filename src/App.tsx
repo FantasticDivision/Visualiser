@@ -7,6 +7,7 @@ import { normalizeBoxes, normalizeItems, normalizePlacements } from './utils/nor
 import { autoLayoutPlacement } from './utils/autoLayout'
 import { buildItemColorMap } from './utils/palette'
 import { DATA_SOURCES } from './config'
+import packingData from './data/sample.json'
 
 export default function App(){
   const [boxes, setBoxes] = useState<BoxType[] | null>(null)
@@ -17,6 +18,8 @@ export default function App(){
   const [selectedBoxRef, setSelectedBoxRef] = useState<string>('MED')
   const [boxPickerOpen, setBoxPickerOpen] = useState(false)
   const [boxFilter, setBoxFilter] = useState('')
+  const [packingMode, setPackingMode] = useState(false)
+  const [packingStep, setPackingStep] = useState(0)
 
   useEffect(()=>{
     fetch(DATA_SOURCES.boxes).then(r=>r.json()).then(raw => setBoxes(normalizeBoxes(raw)))
@@ -61,6 +64,27 @@ export default function App(){
       return { ...it, ...placement, displayed, center }
     })
   }, [items, med, placementSource])
+
+  const packingItems = packingData.cartons[0].items
+
+  const placedWithOrder = useMemo(() => {
+    return placed
+      .map(item => {
+        const packingInfo = packingItems.find(
+          p => p.itemCode === item.ItemCode
+        )
+
+        return {
+          ...item,
+          packingOrder: packingInfo?.packingOrder ?? 999
+        }
+      })
+      .sort((a, b) => a.packingOrder - b.packingOrder)
+  }, [placed])
+
+  const visibleItems = packingMode
+    ? placedWithOrder.slice(0, packingStep)
+    : placed
 
   const totalWeight = items ? totalItemsWeight(items) : 0
   const cartonVolumeMm = med ? cartonVolume(med) : 1
@@ -112,10 +136,62 @@ export default function App(){
           </p>
         </aside>
         <section className="viewer">
-          <div className="viewer-topbar">
-            <button onClick={()=>{ setSelected(null); setResetSignal(s=>s+1) }}>Reset View</button>
-          </div>
-          <Scene carton={{Width:med.Width, Length:med.Length, Depth:med.Depth}} items={placed} colors={itemColors} selected={selected} onSelect={id=>setSelected(id)} resetSignal={resetSignal} />
+        <div className="viewer-topbar">
+
+<button
+  onClick={() => {
+    setSelected(null)
+    setResetSignal(s => s + 1)
+  }}
+>
+  Reset View
+</button>
+
+{!packingMode ? (
+  <button
+    onClick={() => {
+      setPackingMode(true)
+      setPackingStep(0)
+    }}
+  >
+    Show Packing Steps
+  </button>
+) : (
+  <>
+    <button
+      disabled={packingStep === 0}
+      onClick={() =>
+        setPackingStep(step => Math.max(0, step - 1))
+      }
+    >
+      Previous
+    </button>
+
+    <button
+      disabled={packingStep === placedWithOrder.length}
+      onClick={() =>
+        setPackingStep(step =>
+          Math.min(placedWithOrder.length, step + 1)
+        )
+      }
+    >
+      Next
+    </button>
+
+    <button
+      className="secondary"
+      onClick={() => {
+        setPackingMode(false)
+        setPackingStep(0)
+      }}
+    >
+      Show All
+    </button>
+  </>
+)}
+
+</div>
+          <Scene carton={{Width:med.Width, Length:med.Length, Depth:med.Depth}} items={visibleItems} colors={itemColors} selected={selected} onSelect={id=>setSelected(id)} resetSignal={resetSignal} />
         </section>
         <aside className="panel right">
           <h3>Item Details</h3>
