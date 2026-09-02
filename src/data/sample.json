@@ -1,76 +1,79 @@
 {
-    "packingId": "PACK-001",
-    "status": "success",
-  
-    "cartons": [
-      {
-        "cartonId": "CARTON-001",
-        "boxReference": "MED",
-  
-        "dimensions": {
-          "width": 400,
-          "length": 400,
-          "depth": 400
+  "packingId": "PACK-001",
+  "status": "success",
+
+  "cartons": [
+    {
+      "cartonId": "CARTON-001",
+      "boxReference": "MED",
+
+      "dimensions": {
+        "width": 400,
+        "length": 400,
+        "depth": 400
+      },
+
+      "items": [
+        {
+          "itemCode": "ITM-001",
+          "itemReference": "Widget A",
+          "weight": 1.2,
+
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+
+          "displayed": {
+            "width": 100,
+            "length": 200,
+            "depth": 50
+          },
+
+          "packingOrder": 1
         },
-  
-        "items": [
-          {
-            "itemCode": "ITM-001",
-            "itemReference": "Widget A",
-  
-            "position": {
-              "x": 0,
-              "y": 0,
-              "z": 0
-            },
-  
-            "displayed": {
-              "width": 100,
-              "length": 200,
-              "depth": 50
-            },
-  
-            "packingOrder": 1
+
+        {
+          "itemCode": "ITM-002",
+          "itemReference": "Widget B",
+          "weight": 2.5,
+
+          "position": {
+            "x": 100,
+            "y": 0,
+            "z": 0
           },
-  
-          {
-            "itemCode": "ITM-002",
-            "itemReference": "Widget B",
-  
-            "position": {
-              "x": 100,
-              "y": 0,
-              "z": 0
-            },
-  
-            "displayed": {
-              "width": 150,
-              "length": 300,
-              "depth": 75
-            },
-  
-            "packingOrder": 2
+
+          "displayed": {
+            "width": 150,
+            "length": 300,
+            "depth": 75
           },
-  
-          {
-            "itemCode": "ITM-003",
-            "itemReference": "Fragile Glassware",
-  
-            "position": {
-              "x": 250,
-              "y": 0,
-              "z": 0
-            },
-  
-            "displayed": {
-              "width": 80,
-              "length": 80,
-              "depth": 120
-            },
-  
-            "packingOrder": 3
-          }
-        ]
-      }
-    ]
-  }
+
+          "packingOrder": 2
+        },
+
+        {
+          "itemCode": "ITM-003",
+          "itemReference": "Fragile Glassware",
+          "weight": 0.8,
+
+          "position": {
+            "x": 250,
+            "y": 0,
+            "z": 0
+          },
+
+          "displayed": {
+            "width": 80,
+            "length": 80,
+            "depth": 120
+          },
+
+          "packingOrder": 3
+        }
+      ]
+    }
+  ]
+}

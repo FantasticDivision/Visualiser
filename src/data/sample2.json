@@ -1,0 +1,177 @@
+{
+    "packingId": "PACK-002",
+    "status": "success",
+    "cartons": [
+      {
+        "cartonId": "CARTON-002",
+        "boxReference": "LRG",
+        "dimensions": {
+          "width": 600,
+          "length": 500,
+          "depth": 450
+        },
+        "items": [
+          {
+            "itemCode": "ITM-001",
+            "itemReference": "Widget A",
+            "weight": 1.2,
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            "displayed": {
+              "width": 100,
+              "length": 200,
+              "depth": 50
+            },
+            "packingOrder": 1
+          },
+          {
+            "itemCode": "ITM-002",
+            "itemReference": "Widget B",
+            "weight": 2.5,
+            "position": {
+              "x": 100,
+              "y": 0,
+              "z": 0
+            },
+            "displayed": {
+              "width": 150,
+              "length": 200,
+              "depth": 75
+            },
+            "packingOrder": 2
+          },
+          {
+            "itemCode": "ITM-003",
+            "itemReference": "Fragile Glassware",
+            "weight": 0.8,
+            "position": {
+              "x": 250,
+              "y": 0,
+              "z": 0
+            },
+            "displayed": {
+              "width": 80,
+              "length": 80,
+              "depth": 120
+            },
+            "packingOrder": 3
+          },
+          {
+            "itemCode": "ITM-004",
+            "itemReference": "Small Electronics",
+            "weight": 1.0,
+            "position": {
+              "x": 330,
+              "y": 0,
+              "z": 0
+            },
+            "displayed": {
+              "width": 120,
+              "length": 150,
+              "depth": 80
+            },
+            "packingOrder": 4
+          },
+          {
+            "itemCode": "ITM-005",
+            "itemReference": "Accessory Pack",
+            "weight": 0.6,
+            "position": {
+              "x": 450,
+              "y": 0,
+              "z": 0
+            },
+            "displayed": {
+              "width": 100,
+              "length": 120,
+              "depth": 60
+            },
+            "packingOrder": 5
+          },
+          {
+            "itemCode": "ITM-006",
+            "itemReference": "Tool Kit",
+            "weight": 3.1,
+            "position": {
+              "x": 0,
+              "y": 200,
+              "z": 0
+            },
+            "displayed": {
+              "width": 180,
+              "length": 200,
+              "depth": 100
+            },
+            "packingOrder": 6
+          },
+          {
+            "itemCode": "ITM-007",
+            "itemReference": "Replacement Parts",
+            "weight": 1.7,
+            "position": {
+              "x": 180,
+              "y": 200,
+              "z": 0
+            },
+            "displayed": {
+              "width": 140,
+              "length": 180,
+              "depth": 90
+            },
+            "packingOrder": 7
+          },
+          {
+            "itemCode": "ITM-008",
+            "itemReference": "Cable Bundle",
+            "weight": 0.9,
+            "position": {
+              "x": 320,
+              "y": 200,
+              "z": 0
+            },
+            "displayed": {
+              "width": 100,
+              "length": 160,
+              "depth": 70
+            },
+            "packingOrder": 8
+          },
+          {
+            "itemCode": "ITM-009",
+            "itemReference": "Storage Case",
+            "weight": 2.2,
+            "position": {
+              "x": 420,
+              "y": 200,
+              "z": 0
+            },
+            "displayed": {
+              "width": 160,
+              "length": 200,
+              "depth": 110
+            },
+            "packingOrder": 9
+          },
+          {
+            "itemCode": "ITM-010",
+            "itemReference": "Top Package",
+            "weight": 1.4,
+            "position": {
+              "x": 0,
+              "y": 0,
+              "z": 120
+            },
+            "displayed": {
+              "width": 200,
+              "length": 180,
+              "depth": 100
+            },
+            "packingOrder": 10
+          }
+        ]
+      }
+    ]
+  }
