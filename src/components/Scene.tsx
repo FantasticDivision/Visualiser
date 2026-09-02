@@ -1,49 +1,21 @@
-// React hooks used for storing references, caching calculations,
-// creating reusable functions, and handling side effects.
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-
-// Three.js provides the underlying 3D maths and objects.
 import * as THREE from 'three'
-
-// Canvas creates the Three.js scene inside React.
 import { Canvas } from '@react-three/fiber'
-
-// OrbitControls lets the user rotate, pan and zoom the camera.
 import { OrbitControls } from '@react-three/drei'
 
 import Carton from './Carton'
 import ItemMesh from './ItemMesh'
 import type { PlacedItem } from '../types'
 
-
-// ============================================================
-// CAMERA / ROTATION SETTINGS
-// ============================================================
-
-// How quickly the camera rotates when an arrow button/key is held.
+//CMAERA AND ROTATION SETTINGS
 const ROTATE_SPEED = 1.4
-
-// Prevents the camera from rotating exactly over the top/bottom poles.
-// This avoids problems with the spherical coordinate calculations.
-const POLAR_EPS = 0.001
-
-// Camera field of view in degrees.
-const CAMERA_FOV = 50
-
-// Multiplier used when calculating how far the camera should be
-// from the carton.
-const VIEW_MARGIN = 1
-
-// Direction from the carton that the camera initially sits.
-// normalize() keeps the direction the same but makes its length 1.
-const CAMERA_DIRECTION = new THREE.Vector3(1, 0.8, 1.2).normalize()
+const POLAR_EPS = 0.001 //prevents camera from rotation over top/bottom
+const CAMERA_FOV = 50 //camera angle
+const VIEW_MARGIN = 1 //distance from carton
+const CAMERA_DIRECTION = new THREE.Vector3(1, 0.8, 1.2).normalize() //camera angle from carton
 
 
-// ============================================================
-// ROTATION DIRECTIONS
-// ============================================================
-
-// A Direction can only be one of these four strings.
+//Rotation Direction
 type Direction = 'up' | 'down' | 'left' | 'right'
 
 // Maps keyboard arrow keys to our Direction type.
@@ -55,10 +27,7 @@ const KEY_TO_DIRECTION: Record<string, Direction> = {
 }
 
 
-// ============================================================
-// COMPONENT PROPS
-// ============================================================
-
+//COMPONENT PROPS
 // Defines the data that must be passed into the Scene component.
 type Props = {
 
@@ -74,10 +43,7 @@ type Props = {
 }
 
 
-// ============================================================
-// SCENE COMPONENT
-// ============================================================
-
+//SCENE COMPONENT
 export default function Scene({ carton, items }: Props) {
 
   // Reference to OrbitControls.
@@ -88,7 +54,6 @@ export default function Scene({ carton, items }: Props) {
   const cameraRef = useRef<any>(null)
 
   // Stores which rotation directions are currently being held.
-  //
   // A Set is used because more than one direction could be active,
   // e.g. holding Up + Left at the same time.
   const activeDirections = useRef<Set<Direction>>(new Set())
@@ -102,9 +67,7 @@ export default function Scene({ carton, items }: Props) {
   const lastFrameTime = useRef<number | null>(null)
 
 
-  // ============================================================
   // INITIAL CAMERA POSITION
-  // ============================================================
 
   // Calculate where the camera should start based on carton size.
   //
@@ -437,7 +400,7 @@ export default function Scene({ carton, items }: Props) {
             center={item.center}
 
             // MVP currently gives every item the same colour.
-            color="orange"
+            color="blue"
 
             // Item selection isn't being used in the MVP.
             selected={false}

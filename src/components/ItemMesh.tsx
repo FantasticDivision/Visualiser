@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Mesh } from 'three'
 import { useFrame } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
+import { Html, Edges } from '@react-three/drei'
 
 type Props = {
   id: string
@@ -39,7 +39,20 @@ export default function ItemMesh({ id, dims, center, color, selected, onClick }:
       onPointerOut={() => setHover(false)}
     >
       <boxGeometry args={[w, l, d]} />
-      <meshStandardMaterial color={color} metalness={0.2} roughness={0.4} opacity={1} transparent={false} />
+      <meshStandardMaterial
+        color={color}
+        metalness={0.2}
+        roughness={0.4}
+        opacity={1}
+        transparent={false}
+      />
+      <Edges
+        scale={1.001}
+        threshold={0.1}
+        color="#222"
+        linewidth={2}
+      />
+
       {selected && (
         <mesh scale={[1.01,1.01,1.01]}>
           <boxGeometry args={[w * 1.01, l * 1.01, d * 1.01]} />
