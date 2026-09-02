@@ -380,7 +380,7 @@ export default function Scene({ carton, items }: Props) {
 
 
         {/* Create one ItemMesh for every packed item. */}
-        {items.map(item => (
+        {items.map((item, index) => (
 
           <ItemMesh
             // React uses key to distinguish items in the list.
@@ -399,8 +399,7 @@ export default function Scene({ carton, items }: Props) {
             // Position of the centre of the item.
             center={item.center}
 
-            // MVP currently gives every item the same colour.
-            color="blue"
+            color = {index === items.length -1 ? "red" : "blue"}
 
             // Item selection isn't being used in the MVP.
             selected={false}

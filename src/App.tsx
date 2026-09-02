@@ -48,7 +48,7 @@ export default function App() {
     <div className="app-root">
 
       <header className="app-header">
-        COMP4050 — Fit Visualiser
+        Fit Visualiser
       </header>
 
       <main className="app-main">
