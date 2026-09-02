@@ -399,7 +399,9 @@ export default function Scene({ carton, items }: Props) {
             // Position of the centre of the item.
             center={item.center}
 
-            color = {index === items.length -1 ? "red" : "blue"}
+            // Highlight the newest visible item in red.
+            // Earlier packed items return to blue automatically.
+            color={index === items.length - 1 ? "#c51616" : "#1717a8"}
 
             // Item selection isn't being used in the MVP.
             selected={false}

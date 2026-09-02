@@ -3,27 +3,36 @@ import Scene from './components/Scene'
 import packingData from './data/sample-multiple-boxes.json'
 
 export default function App() {
-  // Which carton is currently selected
+  // Which carton is currently selected.
   const [cartonIndex, setCartonIndex] = useState(0)
 
-  // Current carton based on the selected index
+  // Current carton based on the selected index.
   const carton = packingData.cartons[cartonIndex]
 
-  // How many items from the current carton are displayed
-  const [packingStep, setPackingStep] = useState(carton.items.length)
+  // Start with the first item already visible.
+  const [packingStep, setPackingStep] = useState(
+    Math.min(1, carton.items.length)
+  )
 
-  // Change to a different carton
+  // Change to another carton and start that carton at item 1.
   const selectCarton = (index: number) => {
-    setCartonIndex(index)
+    if (index < 0 || index >= packingData.cartons.length) return
 
-    // When changing cartons, show all items in the new carton
-    setPackingStep(packingData.cartons[index].items.length)
+    setCartonIndex(index)
+    setPackingStep(Math.min(1, packingData.cartons[index].items.length))
   }
 
-  // Convert JSON items into the format Scene expects
-  const items = carton.items
+  const previousCarton = () => selectCarton(cartonIndex - 1)
+  const nextCarton = () => selectCarton(cartonIndex + 1)
+
+  // Keep the packing order in one place so the 3D view and the
+  // packing-step list always agree.
+  const orderedItems = carton.items
     .slice()
     .sort((a, b) => a.packingOrder - b.packingOrder)
+
+  // Only send the items that should currently be visible to Scene.
+  const items = orderedItems
     .slice(0, packingStep)
     .map(item => ({
       ItemCode: item.itemCode,
@@ -44,85 +53,75 @@ export default function App() {
       }
     }))
 
+  // On phones we only show the selected box and its immediate neighbours.
+  const carouselIndexes = [cartonIndex - 1, cartonIndex, cartonIndex + 1]
+    .filter(index => index >= 0 && index < packingData.cartons.length)
+
   return (
     <div className="app-root">
-
       <header className="app-header">
-        Fit Visualiser
+        <button className="icon-button header-menu" type="button" aria-label="Open menu">
+          ☰
+        </button>
+
+        <div className="app-title">Packing Visualiser</div>
+
+        <div className="header-box-icon" aria-hidden="true">◇</div>
       </header>
 
       <main className="app-main">
-
-        <aside className="panel left">
-
-          <h3>Cartons</h3>
-
-          {/* Create one button for every carton in the JSON */}
-          <div className="carton-buttons">
-            {packingData.cartons.map((box, index) => (
-              <button
-                key={box.cartonId}
-                onClick={() => selectCarton(index)}
-                disabled={index === cartonIndex}
-              >
-                BOX {index + 1} - {box.boxReference}
-              </button>
-            ))}
+        <section className="box-navigation" aria-label="Carton navigation">
+          <div className="box-counter">
+            Box {cartonIndex + 1} of {packingData.cartons.length}
           </div>
 
-          <h3>Selected Carton</h3>
+          <div className="box-carousel-row">
+            <button
+              className="carousel-arrow"
+              type="button"
+              aria-label="Previous box"
+              disabled={cartonIndex === 0}
+              onClick={previousCarton}
+            >
+              ‹
+            </button>
 
-          <div>
-            <strong>Reference:</strong> {carton.boxReference}
+            <div className="box-carousel">
+              {carouselIndexes.map(index => {
+                const box = packingData.cartons[index]
+                const isSelected = index === cartonIndex
+
+                return (
+                  <button
+                    key={box.cartonId}
+                    className={`box-card ${isSelected ? 'selected' : ''}`}
+                    type="button"
+                    onClick={() => selectCarton(index)}
+                    aria-current={isSelected ? 'true' : undefined}
+                  >
+                    <strong>Box {index + 1}</strong>
+                    <span>{box.boxReference}</span>
+                    <small>
+                      {box.dimensions.width}×{box.dimensions.length}×{box.dimensions.depth} mm
+                    </small>
+                  </button>
+                )
+              })}
+            </div>
+
+            <button
+              className="carousel-arrow"
+              type="button"
+              aria-label="Next box"
+              disabled={cartonIndex === packingData.cartons.length - 1}
+              onClick={nextCarton}
+            >
+              ›
+            </button>
           </div>
-
-          <div>
-            <strong>Dimensions:</strong>{' '}
-            {carton.dimensions.width} ×{' '}
-            {carton.dimensions.length} ×{' '}
-            {carton.dimensions.depth} mm
-          </div>
-
-          <div>
-            <strong>Items:</strong> {carton.items.length}
-          </div>
-
-        </aside>
+        </section>
 
         <section className="viewer">
-
-          <div className="viewer-topbar">
-
-            <button
-              disabled={packingStep === 0}
-              onClick={() =>
-                setPackingStep(step => Math.max(0, step - 1))
-              }
-            >
-              Previous Item
-            </button>
-
-            <button
-              disabled={packingStep === carton.items.length}
-              onClick={() =>
-                setPackingStep(step =>
-                  Math.min(carton.items.length, step + 1)
-                )
-              }
-            >
-              Next Item
-            </button>
-
-            <button
-              onClick={() =>
-                setPackingStep(carton.items.length)
-              }
-            >
-              Show All
-            </button>
-
-          </div>
-
           <Scene
             carton={{
               Width: carton.dimensions.width,
@@ -131,11 +130,87 @@ export default function App() {
             }}
             items={items}
           />
-
         </section>
 
+        <section className="packing-panel">
+          <div className="packing-panel-header">
+            <div>
+              <h2>Packing Steps</h2>
+              <span>Box {cartonIndex + 1} — {carton.boxReference}</span>
+            </div>
+
+            <strong className="packing-count">
+              {packingStep} / {carton.items.length}
+            </strong>
+          </div>
+
+          <div className="packing-step-list">
+            {orderedItems.map((item, index) => {
+              const stepNumber = index + 1
+              const isCurrent = packingStep > 0 && stepNumber === packingStep
+              const isCompleted = stepNumber < packingStep
+              const isFuture = stepNumber > packingStep
+
+              return (
+                <div
+                  key={`${item.itemCode}-${item.packingOrder}`}
+                  className={`packing-step ${isCurrent ? 'current' : ''} ${isFuture ? 'future' : ''}`}
+                >
+                  <span className="step-number">{stepNumber}</span>
+
+                  <div className="step-details">
+                    <strong>{item.itemCode}</strong>
+                    <span>
+                      {item.displayed.width} × {item.displayed.length} × {item.displayed.depth} mm
+                    </span>
+                  </div>
+
+                  <span
+                    className={`step-status ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}
+                    aria-label={isCompleted ? 'Completed' : isCurrent ? 'Current item' : 'Not yet packed'}
+                  >
+                    {isCompleted ? '✓' : ''}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
+        </section>
       </main>
 
+      <nav className="packing-controls" aria-label="Packing controls">
+        <button
+          className="secondary-action"
+          type="button"
+          disabled={packingStep <= 1}
+          onClick={() =>
+            setPackingStep(step => Math.max(1, step - 1))
+          }
+        >
+          ‹ Previous
+        </button>
+
+        <button
+          className="primary-action"
+          type="button"
+          disabled={packingStep === carton.items.length}
+          onClick={() =>
+            setPackingStep(step =>
+              Math.min(carton.items.length, step + 1)
+            )
+          }
+        >
+          Next ›
+        </button>
+
+        <button
+          className="secondary-action"
+          type="button"
+          onClick={() => setPackingStep(carton.items.length)}
+        >
+          Show All
+        </button>
+      </nav>
     </div>
   )
 }
