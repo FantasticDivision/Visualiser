@@ -1,0 +1,488 @@
+{
+  "packingId": "PACK-MULTI-001",
+  "status": "success",
+  "cartons": [
+    {
+      "cartonId": "CARTON-001",
+      "boxReference": "SMALL",
+      "dimensions": {
+        "width": 300,
+        "length": 250,
+        "depth": 200
+      },
+      "items": [
+        {
+          "itemCode": "ITM-001",
+          "itemReference": "Phone Charger",
+          "weight": 0.3,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 100,
+            "length": 120,
+            "depth": 50
+          },
+          "packingOrder": 1
+        },
+        {
+          "itemCode": "ITM-002",
+          "itemReference": "USB Cable Pack",
+          "weight": 0.2,
+          "position": {
+            "x": 100,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 80,
+            "length": 120,
+            "depth": 40
+          },
+          "packingOrder": 2
+        },
+        {
+          "itemCode": "ITM-003",
+          "itemReference": "Wireless Mouse",
+          "weight": 0.4,
+          "position": {
+            "x": 180,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 100,
+            "length": 140,
+            "depth": 60
+          },
+          "packingOrder": 3
+        }
+      ]
+    },
+    {
+      "cartonId": "CARTON-002",
+      "boxReference": "MEDIUM",
+      "dimensions": {
+        "width": 450,
+        "length": 400,
+        "depth": 350
+      },
+      "items": [
+        {
+          "itemCode": "ITM-004",
+          "itemReference": "Keyboard",
+          "weight": 1.1,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 400,
+            "length": 150,
+            "depth": 50
+          },
+          "packingOrder": 1
+        },
+        {
+          "itemCode": "ITM-005",
+          "itemReference": "Headphones",
+          "weight": 0.8,
+          "position": {
+            "x": 0,
+            "y": 150,
+            "z": 0
+          },
+          "displayed": {
+            "width": 180,
+            "length": 180,
+            "depth": 100
+          },
+          "packingOrder": 2
+        },
+        {
+          "itemCode": "ITM-006",
+          "itemReference": "Webcam",
+          "weight": 0.5,
+          "position": {
+            "x": 180,
+            "y": 150,
+            "z": 0
+          },
+          "displayed": {
+            "width": 120,
+            "length": 100,
+            "depth": 80
+          },
+          "packingOrder": 3
+        },
+        {
+          "itemCode": "ITM-007",
+          "itemReference": "Desk Microphone",
+          "weight": 1.4,
+          "position": {
+            "x": 300,
+            "y": 150,
+            "z": 0
+          },
+          "displayed": {
+            "width": 120,
+            "length": 180,
+            "depth": 160
+          },
+          "packingOrder": 4
+        }
+      ]
+    },
+    {
+      "cartonId": "CARTON-003",
+      "boxReference": "LARGE",
+      "dimensions": {
+        "width": 600,
+        "length": 500,
+        "depth": 450
+      },
+      "items": [
+        {
+          "itemCode": "ITM-008",
+          "itemReference": "Laptop Stand",
+          "weight": 2.0,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 250,
+            "length": 250,
+            "depth": 80
+          },
+          "packingOrder": 1
+        },
+        {
+          "itemCode": "ITM-009",
+          "itemReference": "Speaker",
+          "weight": 2.6,
+          "position": {
+            "x": 250,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 180,
+            "length": 200,
+            "depth": 200
+          },
+          "packingOrder": 2
+        },
+        {
+          "itemCode": "ITM-010",
+          "itemReference": "Power Board",
+          "weight": 0.9,
+          "position": {
+            "x": 430,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 150,
+            "length": 250,
+            "depth": 70
+          },
+          "packingOrder": 3
+        },
+        {
+          "itemCode": "ITM-011",
+          "itemReference": "Tool Kit",
+          "weight": 3.2,
+          "position": {
+            "x": 0,
+            "y": 250,
+            "z": 0
+          },
+          "displayed": {
+            "width": 280,
+            "length": 220,
+            "depth": 150
+          },
+          "packingOrder": 4
+        },
+        {
+          "itemCode": "ITM-012",
+          "itemReference": "Storage Case",
+          "weight": 2.1,
+          "position": {
+            "x": 280,
+            "y": 250,
+            "z": 0
+          },
+          "displayed": {
+            "width": 280,
+            "length": 220,
+            "depth": 120
+          },
+          "packingOrder": 5
+        },
+        {
+          "itemCode": "ITM-013",
+          "itemReference": "Accessory Box",
+          "weight": 1.0,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 200
+          },
+          "displayed": {
+            "width": 200,
+            "length": 180,
+            "depth": 100
+          },
+          "packingOrder": 6
+        }
+      ]
+    },
+    {
+      "cartonId": "CARTON-004",
+      "boxReference": "XLARGE",
+      "dimensions": {
+        "width": 700,
+        "length": 600,
+        "depth": 500
+      },
+      "items": [
+        {
+          "itemCode": "ITM-014",
+          "itemReference": "Desktop Monitor",
+          "weight": 4.5,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 600,
+            "length": 100,
+            "depth": 400
+          },
+          "packingOrder": 1
+        },
+        {
+          "itemCode": "ITM-015",
+          "itemReference": "Laptop",
+          "weight": 2.2,
+          "position": {
+            "x": 0,
+            "y": 100,
+            "z": 0
+          },
+          "displayed": {
+            "width": 350,
+            "length": 250,
+            "depth": 30
+          },
+          "packingOrder": 2
+        },
+        {
+          "itemCode": "ITM-016",
+          "itemReference": "Laptop Dock",
+          "weight": 0.9,
+          "position": {
+            "x": 350,
+            "y": 100,
+            "z": 0
+          },
+          "displayed": {
+            "width": 250,
+            "length": 180,
+            "depth": 60
+          },
+          "packingOrder": 3
+        },
+        {
+          "itemCode": "ITM-017",
+          "itemReference": "External Hard Drive",
+          "weight": 0.7,
+          "position": {
+            "x": 0,
+            "y": 350,
+            "z": 0
+          },
+          "displayed": {
+            "width": 150,
+            "length": 120,
+            "depth": 40
+          },
+          "packingOrder": 4
+        }
+      ]
+    },
+    {
+      "cartonId": "CARTON-005",
+      "boxReference": "OVERSIZE",
+      "dimensions": {
+        "width": 800,
+        "length": 650,
+        "depth": 550
+      },
+      "items": [
+        {
+          "itemCode": "ITM-018",
+          "itemReference": "Gaming Console",
+          "weight": 4.0,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 350,
+            "length": 250,
+            "depth": 80
+          },
+          "packingOrder": 1
+        },
+        {
+          "itemCode": "ITM-019",
+          "itemReference": "Game Controller",
+          "weight": 0.6,
+          "position": {
+            "x": 350,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 180,
+            "length": 150,
+            "depth": 70
+          },
+          "packingOrder": 2
+        },
+        {
+          "itemCode": "ITM-020",
+          "itemReference": "VR Headset",
+          "weight": 0.9,
+          "position": {
+            "x": 530,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 220,
+            "length": 200,
+            "depth": 120
+          },
+          "packingOrder": 3
+        },
+        {
+          "itemCode": "ITM-021",
+          "itemReference": "VR Controllers",
+          "weight": 0.8,
+          "position": {
+            "x": 0,
+            "y": 250,
+            "z": 0
+          },
+          "displayed": {
+            "width": 180,
+            "length": 120,
+            "depth": 100
+          },
+          "packingOrder": 4
+        },
+        {
+          "itemCode": "ITM-022",
+          "itemReference": "Gaming Headset",
+          "weight": 0.5,
+          "position": {
+            "x": 180,
+            "y": 250,
+            "z": 0
+          },
+          "displayed": {
+            "width": 220,
+            "length": 180,
+            "depth": 100
+          },
+          "packingOrder": 5
+        }
+      ]
+    },
+    {
+      "cartonId": "CARTON-006",
+      "boxReference": "SPECIAL",
+      "dimensions": {
+        "width": 500,
+        "length": 450,
+        "depth": 400
+      },
+      "items": [
+        {
+          "itemCode": "ITM-023",
+          "itemReference": "Camera Body",
+          "weight": 1.2,
+          "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 180,
+            "length": 140,
+            "depth": 100
+          },
+          "packingOrder": 1
+        },
+        {
+          "itemCode": "ITM-024",
+          "itemReference": "Camera Lens",
+          "weight": 0.8,
+          "position": {
+            "x": 180,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 140,
+            "length": 140,
+            "depth": 120
+          },
+          "packingOrder": 2
+        },
+        {
+          "itemCode": "ITM-025",
+          "itemReference": "Tripod",
+          "weight": 1.5,
+          "position": {
+            "x": 320,
+            "y": 0,
+            "z": 0
+          },
+          "displayed": {
+            "width": 150,
+            "length": 180,
+            "depth": 180
+          },
+          "packingOrder": 3
+        },
+        {
+          "itemCode": "ITM-026",
+          "itemReference": "Camera Bag",
+          "weight": 0.9,
+          "position": {
+            "x": 0,
+            "y": 180,
+            "z": 0
+          },
+          "displayed": {
+            "width": 300,
+            "length": 200,
+            "depth": 120
+          },
+          "packingOrder": 4
+        }
+      ]
+    }
+  ]
+}

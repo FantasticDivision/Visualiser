@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Scene from './components/Scene'
-import packingData from './data/sample-multiple-boxes.json'
+import packingData from './data/sample-carousel-test.json'
+//import packingData from './data/sample-multiple-boxes.json'
 
 export default function App() {
   // Which carton is currently selected.
@@ -14,12 +15,16 @@ export default function App() {
     Math.min(1, carton.items.length)
   )
 
+  // Check if packing is complete
+  const [isComplete, setIsComplete] = useState(false)
+
   // Change to another carton and start that carton at item 1.
   const selectCarton = (index: number) => {
     if (index < 0 || index >= packingData.cartons.length) return
 
     setCartonIndex(index)
     setPackingStep(Math.min(1, packingData.cartons[index].items.length))
+    setIsComplete(false)
   }
 
   const previousCarton = () => selectCarton(cartonIndex - 1)
@@ -54,8 +59,34 @@ export default function App() {
     }))
 
   // On phones we only show the selected box and its immediate neighbours.
-  const carouselIndexes = [cartonIndex - 1, cartonIndex, cartonIndex + 1]
-    .filter(index => index >= 0 && index < packingData.cartons.length)
+const totalBoxes = packingData.cartons.length
+
+let carouselIndexes: number[]
+
+if (totalBoxes <= 3) {
+  // Show all boxes when there are 3 or fewer.
+  carouselIndexes = Array.from(
+    { length: totalBoxes },
+    (_, index) => index
+  )
+} else if (cartonIndex === 0) {
+  // First box selected: show boxes 1, 2, 3.
+  carouselIndexes = [0, 1, 2]
+} else if (cartonIndex === totalBoxes - 1) {
+  // Last box selected: show the last 3 boxes.
+  carouselIndexes = [
+    totalBoxes - 3,
+    totalBoxes - 2,
+    totalBoxes - 1
+  ]
+} else {
+  // Middle: selected box stays in the centre.
+  carouselIndexes = [
+    cartonIndex - 1,
+    cartonIndex,
+    cartonIndex + 1
+  ]
+}
 
   return (
     <div className="app-root">
@@ -140,14 +171,16 @@ export default function App() {
             </div>
 
             <strong className="packing-count">
-              {packingStep} / {carton.items.length}
-            </strong>
+            {isComplete
+              ? 'Completed ✓'
+              : `${packingStep} / ${carton.items.length}`}
+          </strong>
           </div>
 
           <div className="packing-step-list">
             {orderedItems.map((item, index) => {
               const stepNumber = index + 1
-             const isPackingComplete = packingStep > carton.items.length
+             const isPackingComplete = isComplete
 
   const isCurrent =
   !isPackingComplete &&
@@ -200,17 +233,23 @@ const isFuture =
         </button>
 
        <button
-  className="primary-action"
-  type="button"
-  disabled={packingStep > carton.items.length}
-  onClick={() =>
-    setPackingStep(step =>
-      Math.min(carton.items.length + 1, step + 1)
-    )
-  }
->
-  {packingStep === carton.items.length ? 'Complete ✓' : 'Next ›'}
-</button>
+          className="primary-action"
+          type="button"
+          disabled={isComplete}
+          onClick={() => {
+            if (packingStep === carton.items.length) {
+              setIsComplete(true)
+            } else {
+              setPackingStep(step => step + 1)
+            }
+          }}
+        >
+          {isComplete
+            ? 'Completed ✓'
+            : packingStep === carton.items.length
+              ? 'Complete ✓'
+              : 'Next ›'}
+        </button>
 
         <button
           className="secondary-action"
