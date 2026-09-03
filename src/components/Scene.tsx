@@ -10,8 +10,8 @@ import type { PlacedItem } from '../types'
 //CMAERA AND ROTATION SETTINGS
 const ROTATE_SPEED = 1.4
 const POLAR_EPS = 0.001 //prevents camera from rotation over top/bottom
-const CAMERA_FOV = 50 //camera angle
-const VIEW_MARGIN = 1 //distance from carton
+const CAMERA_FOV = 45 //camera angle
+const VIEW_MARGIN = 1.35 //distance from carton
 const CAMERA_DIRECTION = new THREE.Vector3(1, 0.8, 1.2).normalize() //camera angle from carton
 
 

@@ -147,9 +147,18 @@ export default function App() {
           <div className="packing-step-list">
             {orderedItems.map((item, index) => {
               const stepNumber = index + 1
-              const isCurrent = packingStep > 0 && stepNumber === packingStep
-              const isCompleted = stepNumber < packingStep
-              const isFuture = stepNumber > packingStep
+             const isPackingComplete = packingStep > carton.items.length
+
+  const isCurrent =
+  !isPackingComplete &&
+  packingStep > 0 &&
+  stepNumber === packingStep
+
+const isCompleted =
+  isPackingComplete || stepNumber < packingStep
+
+const isFuture =
+  !isPackingComplete && stepNumber > packingStep
 
               return (
                 <div
@@ -190,18 +199,18 @@ export default function App() {
           ‹ Previous
         </button>
 
-        <button
-          className="primary-action"
-          type="button"
-          disabled={packingStep === carton.items.length}
-          onClick={() =>
-            setPackingStep(step =>
-              Math.min(carton.items.length, step + 1)
-            )
-          }
-        >
-          Next ›
-        </button>
+       <button
+  className="primary-action"
+  type="button"
+  disabled={packingStep > carton.items.length}
+  onClick={() =>
+    setPackingStep(step =>
+      Math.min(carton.items.length + 1, step + 1)
+    )
+  }
+>
+  {packingStep === carton.items.length ? 'Complete ✓' : 'Next ›'}
+</button>
 
         <button
           className="secondary-action"
